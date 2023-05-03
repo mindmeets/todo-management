@@ -1,0 +1,8 @@
+INSERT INTO `users` (username,password,enabled)
+VALUES 
+('user1','{noop}dummy',true),
+('admin1','{noop}dummy',true);
+
+INSERT INTO `authorities` (username,authority)
+VALUES 
+('user1','ROLE_USER'),('admin1','ROLE_ADMIN');
