@@ -55,11 +55,9 @@ public class JwtSecurityConfiguration {
 	@Bean
 	public UserDetailsService userDetailsService(DataSource dataSource) {
 		var user = User.withUsername("user")
-//				.password("{noop}dummy")
 				.password("dummy").passwordEncoder(pwd -> passwordEncoder().encode(pwd)).roles("USER").build();
 
 		var admin = User.withUsername("admin")
-//				.password("{noop}dummy")
 				.password("dummy").passwordEncoder(pwd -> passwordEncoder().encode(pwd)).roles("ADMIN").build();
 
 		var jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
@@ -115,15 +113,5 @@ public class JwtSecurityConfiguration {
 		return new NimbusJwtEncoder(jwkSource);
 	}
 
-	@Bean
-	public JwtAuthenticationConverter jwtAuthenticationConverter() {
-		final JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-		grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-		grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
-		final JwtAuthenticationConverter jac = new JwtAuthenticationConverter();
-		jac.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-		return jac;
-	}
 
 }

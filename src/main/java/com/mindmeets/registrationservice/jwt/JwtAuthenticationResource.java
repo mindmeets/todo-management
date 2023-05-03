@@ -21,9 +21,7 @@ public class JwtAuthenticationResource {
 
 	@PostMapping("authenticate")
 	public JwtResponse authenticate(Authentication authentication) {
-		System.out.println("===>authentication ===>" + authentication);
-		String token = createToken(authentication);
-		return new JwtResponse(token);
+		return new JwtResponse(createToken(authentication));
 	}
 
 	private String createToken(Authentication authentication) {
