@@ -27,12 +27,13 @@ public class TodoResource {
 
 //	 and #username == authentication.name
 	@GetMapping("/users/{username}/todos")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("!hasAuthority('ROLE_ADMIN')")
 	public Todo retriveTodosForSpecificUser(@PathVariable String username) {
 		return TODOS_LIST.get(0);
 	}
 
 	@PostMapping("/users/{username}/todos")
+	@PreAuthorize("hasRole('USER') && !hasAuthority('ROLE_ADMIN')")
 	public void createTodosForSpecificUser(@PathVariable String username, @RequestBody Todo todo) {
 		logger.info("Create {} for {}", todo, username);
 	}
