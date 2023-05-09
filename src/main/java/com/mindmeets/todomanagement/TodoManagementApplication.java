@@ -1,13 +1,13 @@
-package com.mindmeets.registrationservice;
+package com.mindmeets.todomanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RegistrationServiceApplication {
+public class TodoManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RegistrationServiceApplication.class, args);
+		SpringApplication.run(TodoManagementApplication.class, args);
 	}
 
 }

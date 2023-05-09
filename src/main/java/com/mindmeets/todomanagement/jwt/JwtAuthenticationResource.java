@@ -1,4 +1,4 @@
-package com.mindmeets.registrationservice.jwt;
+package com.mindmeets.todomanagement.jwt;
 
 import java.time.Instant;
 import java.util.Collection;

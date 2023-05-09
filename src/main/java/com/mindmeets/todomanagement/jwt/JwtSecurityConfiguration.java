@@ -1,4 +1,4 @@
-package com.mindmeets.registrationservice.jwt;
+package com.mindmeets.todomanagement.jwt;
 
 import static //
 org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console; // !
@@ -44,20 +44,12 @@ import com.nimbusds.jose.proc.SecurityContext;
 public class JwtSecurityConfiguration {
 
 	public static final String AUTHORITIES_CLAIM_NAME = "roles";
-	
-	@Bean
-	public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class)
-	            .build();
-	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> {
-			auth
-				.requestMatchers("/login", "/signup").permitAll()
-				.requestMatchers(toH2Console()).permitAll()
-				.anyRequest().authenticated();
+			auth.requestMatchers("/login").permitAll().requestMatchers(toH2Console()).permitAll().anyRequest()
+					.authenticated();
 		});
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		// http.formLogin();
@@ -91,8 +83,8 @@ public class JwtSecurityConfiguration {
 				.roles("ADMIN", "USER").build();
 
 		var jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-//		jdbcUserDetailsManager.createUser(user);
-//		jdbcUserDetailsManager.createUser(admin);
+		jdbcUserDetailsManager.createUser(user);
+		jdbcUserDetailsManager.createUser(admin);
 
 		return jdbcUserDetailsManager;
 //		return new InMemoryUserDetailsManager(user, admin);
@@ -106,8 +98,7 @@ public class JwtSecurityConfiguration {
 	@Bean
 	public DataSource dataSource() {
 		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-//				.addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
-				.build();
+				.addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION).build();
 	}
 
 	@Bean
@@ -142,6 +133,11 @@ public class JwtSecurityConfiguration {
 	@Bean
 	public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
 		return new NimbusJwtEncoder(jwkSource);
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
+		return http.getSharedObject(AuthenticationManagerBuilder.class).build();
 	}
 
 }
