@@ -1,4 +1,4 @@
-package com.mindmeets.registrationservice.resources;
+package com.mindmeets.todomanagement.resources.play;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
