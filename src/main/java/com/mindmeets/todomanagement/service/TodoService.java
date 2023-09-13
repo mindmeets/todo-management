@@ -16,7 +16,7 @@ public class TodoService {
 	
 	static {
 		todos.add(new Todo(++idCount, "user", "Get AWS certified", new Date(), false));
-		todos.add(new Todo(++idCount, "user", "Learn React", new Date(), false));
+		todos.add(new Todo(++idCount, "user", "Learn React", new Date(), true));
 		todos.add(new Todo(++idCount, "user", "Workout in morning", new Date(), false));
 	}
 	
@@ -38,11 +38,10 @@ public class TodoService {
 	public Todo save(Todo todo) {
 		if (todo.getId() == -1) {
 			todo.setId(++idCount);
-			todos.add(todo);
 		} else {
 			deleteById(todo.getId());
-			todos.add(todo);
 		}
+		todos.add(todo);
 		return todo;
 	}
 
