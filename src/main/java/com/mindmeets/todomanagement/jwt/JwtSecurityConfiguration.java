@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,12 +49,16 @@ public class JwtSecurityConfiguration {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(auth -> {
-			auth.requestMatchers("/login").permitAll().requestMatchers(toH2Console()).permitAll().anyRequest()
-					.authenticated();
+			auth
+				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+				.requestMatchers("/login").permitAll()
+				.requestMatchers(toH2Console()).permitAll()
+				.anyRequest()
+				.authenticated();
 		});
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		// http.formLogin();
-		http.httpBasic();
+//		http.httpBasic();
 		http.csrf().disable();
 		http.headers().frameOptions().sameOrigin();
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
