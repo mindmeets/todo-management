@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 @Entity(name = "users")
 public class User {
@@ -13,6 +14,8 @@ public class User {
 	@JsonIgnore
 	private String password;
 	private boolean enabled;
+	@Transient
+	private boolean admin;
 
 	public User() {
 	}
@@ -50,6 +53,14 @@ public class User {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 
 	@Override
