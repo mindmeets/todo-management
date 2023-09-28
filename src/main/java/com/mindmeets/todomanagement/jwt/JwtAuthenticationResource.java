@@ -2,6 +2,7 @@ package com.mindmeets.todomanagement.jwt;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class JwtAuthenticationResource {
 	public JwtResponse login(@RequestBody JwtRequest authRequest, Authentication authentication)
 			throws AuthenticationException {
 		validateLogin(authRequest.username(), authRequest.password());
-		return new JwtResponse(createToken(authRequest.username()));
+		return createToken(authRequest.username());
 	}
 
 	private void validateLogin(String username, String password) throws AuthenticationException {
@@ -61,22 +62,26 @@ public class JwtAuthenticationResource {
 
 	@PostMapping("authenticate")
 	public JwtResponse authenticate(Authentication authentication) {
-		return new JwtResponse(createToken(authentication.getName()));
+		return createToken(authentication.getName());
 	}
 
-	private String createToken(String username) {
+	private JwtResponse createToken(String username) {
 		var authUser = userDetailsService.loadUserByUsername(username);
 		var claims = JwtClaimsSet.builder().issuer("self").issuedAt(Instant.now())
 				.expiresAt(Instant.now().plusSeconds(60 * 30)).subject(authUser.getUsername())
 				.claim("roles", createScope(authUser.getAuthorities())).build();
-		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+		var jwtToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+		
+		return new JwtResponse(username, jwtToken, authUser.getAuthorities()
+					.stream().map(authority -> authority.getAuthority().substring(5))
+					.collect(Collectors.toList()));
 	}
 
 	private String createScope(Collection<? extends GrantedAuthority> authorities) {
 		return authorities.stream().map(a -> a.getAuthority()).collect(Collectors.joining(" "));
 	}
 
-	record JwtResponse(String token) {
+	record JwtResponse(String username, String token, List<String> roles) {
 	}
 
 	record JwtRequest(String username, String password) {

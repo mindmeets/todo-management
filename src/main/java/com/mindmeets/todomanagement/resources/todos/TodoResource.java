@@ -22,12 +22,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mindmeets.todomanagement.model.Todo;
 import com.mindmeets.todomanagement.repo.TodoJpaRepo;
-import com.mindmeets.todomanagement.service.TodoService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/users")
-//@PreAuthorize("hasRole('USER') and #username == authentication.name")
+@PreAuthorize("#username == authentication.name")
 public class TodoResource {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -77,7 +76,6 @@ public class TodoResource {
 		log.info("Todo id: {}", todo.getId());
 		todo.setId(0L);
 //		Todo createdTodo = todoService.save(todo);
-		System.out.println("==>Username: " + username);
 		todo.setUsername(username);
 		Todo createdTodo = todoRepo.save(todo);
 		
